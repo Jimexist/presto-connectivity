@@ -5,7 +5,7 @@ database:
   user: $USER
 
   # the JDBC URL
-  url: jdbc:presto://$PRESTO_HOST:${PRESTO_PORT:8889}/hive
+  url: jdbc:presto://${PRESTO_HOST}:${PRESTO_PORT}/hive
 
   # any properties specific to your JDBC driver:
   properties:
