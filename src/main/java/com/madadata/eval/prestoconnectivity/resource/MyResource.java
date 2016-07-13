@@ -77,6 +77,10 @@ public class MyResource {
     }
 
 
+    /*
+    work well
+    BUT must set schema in config otherwise will "com.facebook.presto.jdbc.internal.client.FailureInfo$FailureException: line 1:1: Schema must be specified when session schema is not set"
+     */
     private int executeCreate(String sql)throws SQLException {
         try (Handle handle = jdbi.open()) {
             Statement statement = handle.getConnection().createStatement();
@@ -111,7 +115,7 @@ public class MyResource {
     @Path("/create-table")
     @Produces(MediaType.APPLICATION_JSON)
     public int createTable(@QueryParam("name") @NotEmpty String name) throws Exception {
-        return executeCreate(String.format("create table %s (id int primary key, name varchar(100))", name));
+        return executeCreate(String.format("create table %s (id integer, name varchar(100))", name));
     }
 
 
