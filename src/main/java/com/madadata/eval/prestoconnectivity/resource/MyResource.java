@@ -16,8 +16,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,6 +90,24 @@ public class MyResource {
         }
     }
 
+    /*
+    work well
+    id start with 1
+     */
+    private List<Map<String, String>> queryMetadata(String sql) throws SQLException {
+        try (Handle handle = jdbi.open()) {
+            Statement statement = handle.getConnection().createStatement();
+            ResultSetMetaData metaDataSet = statement.executeQuery(sql).getMetaData();
+            List<Map<String, String>> metadata = Lists.newArrayList();
+            for (int i = 1; i < metaDataSet.getColumnCount() + 1; i++){
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put(metaDataSet.getColumnName(i), "" + metaDataSet.getColumnTypeName(i));
+                metadata.add(map);
+            }
+            return metadata;
+        }
+    }
+
     @GET
     @Path("/views")
     @Produces(MediaType.APPLICATION_JSON)
@@ -150,7 +170,6 @@ public class MyResource {
         return executeSQL("update madatest set id = 4 where name = quheng_many" );
     }
 
-
     @GET
     @Path("/groupby")
     @Produces(MediaType.APPLICATION_JSON)
@@ -163,5 +182,25 @@ public class MyResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Object orderby() throws Exception {
         return query("select id, name from madatest order by id desc", "id", "name");
+    }
+
+    /*
+    doesn't work
+    Access Denied
+
+    all operator about ALTER will access denied.
+     */
+    @GET
+    @Path("/drop")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object drop() throws Exception {
+        return query("drop table testint");
+    }
+
+    @GET
+    @Path("/metadata")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadata() throws Exception {
+        return queryMetadata("select * from testtable");
     }
 }
