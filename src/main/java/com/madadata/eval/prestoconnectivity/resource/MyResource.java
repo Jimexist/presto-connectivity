@@ -57,7 +57,7 @@ public class MyResource {
     does not work well, error info:
     com.facebook.presto.jdbc.NotImplementedException: Method Connection.prepareStatement is not yet implemented
      */
-    private List<Map<String, Object>> creatQuery(String sql, String... fields) throws SQLException {
+    private List<Map<String, Object>> createQuery(String sql, String... fields) throws SQLException {
         Set<String> fieldSet = ImmutableSet.copyOf(fields);
         try (Handle handle = jdbi.open()) {
             Query<Map<String, Object>> querySet = handle.createQuery(sql);
@@ -81,7 +81,7 @@ public class MyResource {
     work well
     BUT must set schema in config otherwise will "com.facebook.presto.jdbc.internal.client.FailureInfo$FailureException: line 1:1: Schema must be specified when session schema is not set"
      */
-    private int executeCreate(String sql)throws SQLException {
+    private int executeSQL(String sql)throws SQLException {
         try (Handle handle = jdbi.open()) {
             Statement statement = handle.getConnection().createStatement();
             return statement.executeUpdate(sql);
@@ -104,6 +104,9 @@ public class MyResource {
                 "table_catalog", "table_schema", "table_name", "table_type");
     }
 
+    /*
+    doesn't work
+     */
     @GET
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
@@ -111,19 +114,39 @@ public class MyResource {
         return jdbiCreate(String.format("create table %s (id int primary key, name varchar(100))", name));
     }
 
-    @GET
-    @Path("/create-table")
-    @Produces(MediaType.APPLICATION_JSON)
-    public int createTable(@QueryParam("name") @NotEmpty String name) throws Exception {
-        return executeCreate(String.format("create table %s (id integer, name varchar(100))", name));
-    }
-
-
+    /*
+    doesn't work
+     */
     @GET
     @Path("/createquery")
     @Produces(MediaType.APPLICATION_JSON)
     public Object createQuery() throws Exception {
-        return creatQuery("select * from hive.information_schema.tables",
+        return createQuery("select * from hive.information_schema.tables",
                 "table_catalog", "table_schema", "table_name", "table_type");
+    }
+
+    @GET
+    @Path("/create-table")
+    @Produces(MediaType.APPLICATION_JSON)
+    public int createTable(@QueryParam("name") @NotEmpty String name) throws Exception {
+        return executeSQL(String.format("create table %s (id integer, name varchar(100))", name));
+    }
+
+    @GET
+    @Path("/insert")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object insert() throws Exception {
+        return executeSQL("insert into madatest values (3, 'quheng_many')");
+    }
+
+    /*
+    doesn't work
+    I do not found any support about UPDATE in  https://prestodb.io/docs/current/
+    */
+    @GET
+    @Path("/update")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object update() throws Exception {
+        return executeSQL("update madatest set id = 4 where name = quheng_many" );
     }
 }
