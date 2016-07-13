@@ -149,4 +149,19 @@ public class MyResource {
     public Object update() throws Exception {
         return executeSQL("update madatest set id = 4 where name = quheng_many" );
     }
+
+
+    @GET
+    @Path("/groupby")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object groupby() throws Exception {
+        return query("select sum(id) as sum , name from madatest group by name", "name", "sum");
+    }
+
+    @GET
+    @Path("/orderby")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object orderby() throws Exception {
+        return query("select id, name from madatest order by id desc", "id", "name");
+    }
 }
