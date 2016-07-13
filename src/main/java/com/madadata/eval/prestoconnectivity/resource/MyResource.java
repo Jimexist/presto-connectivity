@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -93,16 +92,14 @@ public class MyResource {
     /*
     work well
     id start with 1
-     */
-    private List<Map<String, String>> queryMetadata(String sql) throws SQLException {
+    */
+    private Map<String, String> queryMetadata(String sql) throws SQLException {
         try (Handle handle = jdbi.open()) {
             Statement statement = handle.getConnection().createStatement();
             ResultSetMetaData metaDataSet = statement.executeQuery(sql).getMetaData();
-            List<Map<String, String>> metadata = Lists.newArrayList();
+            Map<String, String> metadata = Maps.newHashMap();
             for (int i = 1; i < metaDataSet.getColumnCount() + 1; i++){
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put(metaDataSet.getColumnName(i), "" + metaDataSet.getColumnTypeName(i));
-                metadata.add(map);
+                metadata.put(metaDataSet.getColumnName(i), "" + metaDataSet.getColumnTypeName(i));
             }
             return metadata;
         }
