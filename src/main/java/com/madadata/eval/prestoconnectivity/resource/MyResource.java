@@ -53,11 +53,10 @@ public class MyResource {
             return results;
         }
     }
-
-    /*
-    does not work well, error info:
-    com.facebook.presto.jdbc.NotImplementedException: Method Connection.prepareStatement is not yet implemented
-     */
+   /**
+    * does not work well, error info:
+    * com.facebook.presto.jdbc.NotImplementedException: Method Connection.prepareStatement is not yet implemented
+    */
     private List<Map<String, Object>> createQuery(String sql, String... fields) throws SQLException {
         Set<String> fieldSet = ImmutableSet.copyOf(fields);
         try (Handle handle = jdbi.open()) {
@@ -66,10 +65,11 @@ public class MyResource {
         }
     }
 
-    /*
-    does not work well, error info:
-    com.facebook.presto.jdbc.NotImplementedException: Method Connection.prepareStatement is not yet implemented
-     */
+
+   /**
+    * does not work well, error info:
+    * com.facebook.presto.jdbc.NotImplementedException: Method Connection.prepareStatement is not yet implemented
+    */
     private int jdbiCreate(String sql) throws SQLException {
         try (Handle handle = jdbi.open()) {
             handle.execute(sql);
@@ -78,10 +78,10 @@ public class MyResource {
     }
 
 
-    /*
-    work well
-    BUT must set schema in config otherwise will "com.facebook.presto.jdbc.internal.client.FailureInfo$FailureException: line 1:1: Schema must be specified when session schema is not set"
-     */
+   /**
+    * work well
+    * BUT must set schema in config otherwise will "com.facebook.presto.jdbc.internal.client.FailureInfo$FailureException: line 1:1: Schema must be specified when session schema is not set"
+    */
     private int executeSQL(String sql)throws SQLException {
         try (Handle handle = jdbi.open()) {
             Statement statement = handle.getConnection().createStatement();
@@ -89,9 +89,9 @@ public class MyResource {
         }
     }
 
-    /*
-    work well
-    id start with 1
+   /**
+    * work well
+    * id start with 1
     */
     private Map<String, String> queryMetadata(String sql) throws SQLException {
         try (Handle handle = jdbi.open()) {
@@ -121,9 +121,9 @@ public class MyResource {
                 "table_catalog", "table_schema", "table_name", "table_type");
     }
 
-    /*
-    doesn't work
-     */
+   /**
+    * doesn't work
+    */
     @GET
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
@@ -131,9 +131,9 @@ public class MyResource {
         return jdbiCreate(String.format("create table %s (id int primary key, name varchar(100))", name));
     }
 
-    /*
-    doesn't work
-     */
+   /**
+    * doesn't work
+    */
     @GET
     @Path("/createquery")
     @Produces(MediaType.APPLICATION_JSON)
@@ -156,9 +156,9 @@ public class MyResource {
         return executeSQL("insert into madatest values (3, 'quheng_many')");
     }
 
-    /*
-    doesn't work
-    I do not found any support about UPDATE in  https://prestodb.io/docs/current/
+   /**
+    * doesn't work
+    * I do not found any support about UPDATE in  https://prestodb.io/docs/current/
     */
     @GET
     @Path("/update")
@@ -181,12 +181,12 @@ public class MyResource {
         return query("select id, name from madatest order by id desc", "id", "name");
     }
 
-    /*
-    doesn't work
-    Access Denied
-
-    all operator about ALTER will access denied.
-     */
+   /**
+    * doesn't work
+    * Access Denied
+    *
+    * all operator about ALTER will access denied.
+    */
     @GET
     @Path("/drop")
     @Produces(MediaType.APPLICATION_JSON)
