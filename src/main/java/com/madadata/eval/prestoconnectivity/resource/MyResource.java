@@ -194,10 +194,147 @@ public class MyResource {
         return query("drop table testint");
     }
 
+    /**
+     *
+     * @return {"name":"VARCHAR(100)","id":"INTEGER"}
+     * @throws Exception
+     */
     @GET
     @Path("/metadata")
     @Produces(MediaType.APPLICATION_JSON)
     public Object metadata() throws Exception {
         return queryMetadata("select * from testtable");
+    }
+
+    /**
+     *
+     * @return {"id":"INTEGER"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-item")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataItem() throws Exception {
+        return queryMetadata("select id from testtable");
+    }
+
+    /**
+     *
+     * @return {"a":"INTEGER","b":"INTEGER","_col2":"INTEGER"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-plus")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataPlus() throws Exception {
+        return queryMetadata("select a, b, a+b+c from testplus");
+    }
+
+    /**
+     *
+     * @return {"name":"VARCHAR(100)","_col1":"BIGINT"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-count")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataCount() throws Exception {
+        return queryMetadata("select name, count(*) from madatest group by name");
+    }
+
+    /**
+     *
+     * @return {"_col0":"BOOLEAN"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-comparison")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataComparison() throws Exception {
+        return queryMetadata("SELECT 'Paul' BETWEEN 'John' AND 'Ringo'");
+    }
+
+    /**
+     *
+     * @return {"_col0":"DOUBLE","_col2":"DOUBLE","_col1":"DOUBLE","_col4":"DOUBLE","_col3":"DOUBLE","_col5":"INTEGER"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-math")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataMath() throws Exception {
+        return queryMetadata("SELECT infinity(),e(),pi(),cos(a),sqrt(b),abs(c) FROM testplus");
+    }
+
+    /**
+     *
+     * @return {"_col0":"VARBINARY"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-string")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataString() throws Exception {
+        return queryMetadata(" select to_utf8('中文测试')");
+    }
+
+    /**
+     *
+     * @return {"_col0":"VARBINARY"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-binary")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataBinary() throws Exception {
+        return queryMetadata("select from_base64url('JiMyMDAxMzsmIzI1OTkxOyYjMjc5Nzk7JiMzNTc5NzsNCg==')");
+    }
+
+    /**
+     *
+     * @return {"_col0":"BIGINT"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-time")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataTime() throws Exception {
+        return queryMetadata("select day(time) from testinsert limit 10");
+    }
+
+    /**
+     *
+     * @return {"name":"VARCHAR(100)","_col1":"MAP(INTEGER,BIGINT)"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-map")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataMap() throws Exception {
+        return queryMetadata("select name, histogram(id) from madatest group by name");
+    }
+
+    /**
+     *
+     * @return {"_col0":"COLOR"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-color")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataColor() throws Exception {
+        return queryMetadata("select color('RED')");
+    }
+
+    /**
+     *
+     * @return {"_col0":"ARRAY(INTEGER)"}
+     * @throws Exception
+     */
+    @GET
+    @Path("/metadata-array")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Object metadataArray() throws Exception {
+        return queryMetadata("select array_distinct(array[1,2,3,2,14])");
     }
 }
