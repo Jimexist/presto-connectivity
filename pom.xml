@@ -10,8 +10,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dropwizard.version>0.9.3</dropwizard.version>
-        <presto.jdbc.version>0.150</presto.jdbc.version>
+        <dropwizard.version>1.0.0</dropwizard.version>
+        <presto.jdbc.version>0.152</presto.jdbc.version>
+        <hive.jdbc.version>2.1.0</hive.jdbc.version>
     </properties>
 
     <dependencies>
@@ -34,6 +35,12 @@
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-configuration</artifactId>
             <version>${dropwizard.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.hive/hive-jdbc -->
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-jdbc</artifactId>
+            <version>${hive.jdbc.version}</version>
         </dependency>
     </dependencies>
 

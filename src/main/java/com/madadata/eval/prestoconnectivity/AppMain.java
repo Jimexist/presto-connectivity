@@ -18,11 +18,8 @@ public class AppMain extends Application<AppConfig> {
     public void initialize(Bootstrap<AppConfig> bootstrap) {
         // Enable variable substitution with environment variables
         bootstrap.setConfigurationSourceProvider(
-                new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(),
-                        new EnvironmentVariableSubstitutor(false)
-                )
-        );
-
+            new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(),
+                new EnvironmentVariableSubstitutor(false)));
     }
 
     public static void main(String[] args) throws Exception {
